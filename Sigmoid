@@ -1,0 +1,8 @@
+import numpy as np
+
+def Sigmoid(x):
+    """
+    Sigmoid will transform data into a probability between o and 1, based on which
+    a neuron will be activated (or not).
+    """
+    return 1/ (1+np.exp(-x))
