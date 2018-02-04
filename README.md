@@ -1,2 +1,2 @@
-# CS156-Final-Project
-CS156 - Final Project for GitHubPages
+This folder contains code written during a machine learning class. 
+Finalized works are LBA and Final Project.
