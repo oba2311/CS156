@@ -1,0 +1,119 @@
+---
+title: "CS156 2.1"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+**Exercise 7.1.** 
+You play a game in which you have a probability p of winning. If you win the game you gain an amount S and if you lose the game you lose an amount S. Show that the expected gain from playing the game is (2p − 1)S.
+
+
+E(game) is: winning(S)*P + loosing(-S)(1-P) = (2P-1)S
+
+```{r}
+P = sample(10,1, replace = TRUE)
+P
+```
+
+**Exercise 7.2.** 
+It is suggested that the utility of money is based, not on the amount, but rather how much we have relative to other people. Assume a distribution p(i), i = 1, . . . , 10 of incomes using a histogram with 10 bins, each bin representing an income range. Use a histogram to roughly reflect the distribution of incomes in society, namely that most incomes are around the average with few very wealthy and few extremely poor people. 
+```{r}
+X = rnorm(100) # X is a sample of 100 normally distributed random variables
+normal <- rnorm(1000, 50, 10)
+hist(normal,breaks=10, main = "Histogram of Income", xlab = "Income")
+```
+
+Now define the utility of an income x as the chance that income x will be higher than a randomly chosen income y (under the distribution you defined) and relate this to the cumulative distribution of p. Write a program to compute this probability and plot the resulting utility as a function of income.
+Now repeat the coin tossing bet of section(7.1.1) so that if one wins the bet one’s new income will be placed in the top histogram bin, whilst if one loses one’s new income is in the lowest bin. Compare the optimal expected utility decisions under the situations in which one’s original income is (i) average, and (ii) much higher than average.
+
+```{r}
+P = ecdf(normal)    # P is a function giving the empirical CDF of X
+P(60)         # This returns the empirical CDF at 60 (should be close to .85)
+plot(P, main="CDF for Income of 60$", xlab="Income") 
+
+#The Game:
+p = .5 #coin tossing
+worst = min(normal)
+worst
+best = max(normal)
+best
+
+utility = (p*(worst - P(60))) + (1-p)*(best-P(60))
+utility
+```
+
+**Exercise 7.7.** 
+You have B in your bank account. You are asked if you would like to participate in a bet in which, if you win, your bank account will become W. However, if you lose, your bank account will contain only L. You win the bet with probability pw.
+
+** 1.** Assuming that the utility is given by the number of pounds in your bank account, write down a formula for the expected utility of taking the bet, U(bet) and also the expected utility of not taking the bet, U(no bet).
+-----
+```{r}
+#B you have
+#W you could win
+#L you lose
+#Pw  chances of winning 
+
+#U(winning) = Pw * W
+#U(loosing) = Pw * L
+
+#U(bet) = (Pw * W + (1-Pw) * L)
+#U(-bet) =   B  #-(Pw * W + (Pw-1) * L) +B ??
+
+```
+
+**2.** The above situation can be formulated differently. If you win the bet you gain (W − B). If you lose the bet you lose (B − L). Compute the expected amount of money you gain if you bet Ugain(bet) and if you don’t bet Ugain(no bet).
+
+```{r}
+#win = (W − B) + B
+#lose = -(B − L) + B
+
+#p=Pw
+#Ugain(bet) = p((W − B))+(1-p)((L − B))
+#Ugain(no bet) = 0
+```
+
+**3.** Show that U(bet) − U(no bet) = Ugain(bet) − Ugain(no bet).
+```{r}
+#(p * W + (1-p) * L) - B = p((W − B))+(1-p)((L − B))
+#pW-pL+L-B = pW-pB-B+L+pB-pL # <- answer!
+```
+
+**Playing the lottery**
+
+You see that a lottery is advertising that it has a record-breaking payout of 100,000,000. To win the lottery you need to correctly pick 6 numbers from 49 possibilities. It costs 10 to enter, and if you enter now then you can daydream about all the things that you would do with the money. Alternatively you can go and watch a movie with the money instead. You estimate that the movie will be 10% more enjoyable than the daydreaming, but winning the lottery will be one million times better than the movie.
+
+**Should you play this lottery? Explain your reasoning (and/or calculations).**
+
+```{r}
+
+#daydream is 1 for 10$
+#movie is 1.1 for 10$
+#winning is 1.1*1000000 = 1100000
+
+winning_chance = 1/choose(49,6) ; winning_chance
+winning_util = 100000000 * choose(49,6) ; winning_util 
+
+playing_util = 1100000 * (1/winning_chance) + 1 #1 is the daydreaming payoff
+playing_util
+movie_util = 110
+daydream_util = 100
+
+movie_util > daydream_util
+daydream_util > playing_util
+movie_util > playing_util
+
+#movie is the best option.
+
+```
+
+```{r}
+#No:
+#movie_util > daydream_util > winning_util , therefore picking the movie is the best use of the #money for (49C6-1) of the cases, which is a lot.
+```
+
+**What is the expected financial impact if you play this lottery?**
+```{r}
+#You spend 10, you gain winnin_util, which is approaching 0, so basically you lose 10.
+```
+
